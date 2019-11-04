@@ -150,7 +150,7 @@ public class Shape implements ShapeInterface
 	}
 
 	public Edge[] sortThisArray(Edge[] sort_this){
-		Edge[] really=merge_sort(sortthis,0,(sort_this.length-1));
+		Edge[] really=merge_sort(sort_this,0,(sort_this.length-1));
 		return really;
 	}
 	public Edge[] merge_sort(Edge[] sort_this,int low,int high){
@@ -221,8 +221,127 @@ public class Shape implements ShapeInterface
 			sortthis[i]=insertthis;
 		}
 		Edge[] inter=sortThisArray(sortthis);
-		EdgeInterface[] returnthis=inter;
+		EdgeInterface[] returnthis=inter; //could be a compilation error
 		return returnthis;
+	}
+
+	public void depth_traversal(T_vertex tempo){
+		if(tempo.V_status==true){
+			return;
+		}
+		else{
+			vector<T_vertex> helpme=tempo.padosi;
+			tempo.V_status=true;
+			int iterations=helpme.size();
+			v_node<T_vertex> temp=helpme.head;
+			for(int i=0;i<iterations;i++){
+				T_vertex trythis=(T_vertex)temp.getData();
+				depth_traversal(trythis);
+				temp=temp.next;
+			}
+		}
+		
+	}
+
+	public int COUNT_CONNECTED_COMPONENTS(){
+		vector<T_vertex> ctricon=all_triangle.triangles;
+		int count=0;
+		v_node<T_vertex> temp=ctricon.head;
+		while(temp!=null){
+			T_vertex subject=(T_vertex)temp.getData();
+			if((subject.V_status)==true){
+				temp=temp.next;
+			}
+			else{
+				depth_traversal(subject);
+				count++;
+				temp=temp.next;
+			}
+		}
+		v_node<T_vertex> temp2=ctricon.head;
+		while(temp!=null){
+			T_vertex subject=(T_vertex)temp2.getData();
+			subject.V_status=false;
+			temp2=temp2.next;
+		}
+		return count;
+	}
+
+	public Triangle[] sortThisArray_two(Triangle[] sort_this){
+		Triangle[] really=merge_sort_two(sort_this,0,(sort_this.length-1));
+		return really;
+	}
+	public Triangle[] merge_sort_two(Triangle[] sort_this,int low,int high){
+		if(low==high){
+			Triangle[] onearr=new Triangle[1];
+			onearr[0]=sort_this[low];
+			return onearr;
+		}
+		else if(low<high){
+			int middle=(low+high)/2;
+			Triangle[] array1=merge_sort_two(sort_this,low,middle);
+			Triangle[] array2=merge_sort_two(sort_this,middle+1,high);
+			Triangle[] finalarray=merge_two(array1,array2);
+			return finalarray;
+		}
+	}
+	public Triangle[] merge_two(Triangle[] array1,Triangle[] array2){
+		int l1=array1.length;
+		int l2=array2.length;
+		Triangle[] mergedarray = new Triangle[(l1+l2)];
+		int cnt1=0;
+		int cnt2=0;
+		for(int i=0;i<(l1+l2);i++){
+			if((cnt1==l1)&&(cnt2<l2)){
+				mergedarray[i]=array2[cnt2];
+				cnt2++;
+			}
+			else if((cnt2==l2)&&(cnt1<l1)){
+				mergedarray[i]=array1[cnt1];
+				cnt1++;
+			}
+			else if((cnt1<l1)&&(cnt2<l2)){
+				if((array1[cnt1].getLength())<(array2[cnt2].getLength())){
+					mergedarray[i]=array1[cnt1];
+					cnt1++;
+				}
+				else{
+					mergedarray[i]=array2[cnt2];
+					cnt2++;
+				}
+			}
+		}
+		return mergedarray;
+	}
+
+
+	public TriangleInterface [] NEIGHBORS_OF_TRIANGLE(float [] triangle_coord){
+		Point a=new Point(triangle_coord[0],triangle_coord[1],triangle_coord[2]);
+		Point b=new Point(triangle_coord[3],triangle_coord[4],triangle_coord[5]);
+		Point c=new Point(triangle_coord[6],triangle_coord[7],triangle_coord[8]);
+		Triangle abc=new Triangle(a,b,c);
+		T_vertex wegetthis=all_triangle.search(abc);
+		if(wegetthis==null){
+			return null;
+		}
+		else{
+			vector<T_vertex> neighbours=wegetthis.padosi;
+			int length=neighbours.size();
+			Triangle[] sortthis=new Triangle[length];
+			v_node<T_vertex> temp=neighbours.head;
+			int index=0;
+			while(temp!=null){
+				T_vertex trythis=(T_vertex)temp.getData();
+				Triangle fuck=trythis.owner;
+				sortthis[index]=fuck;
+				index++;
+				temp=temp.next;
+			}
+			Triangle[] inter=sortThisArray_two(sortthis);
+			TriangleInterface[] returnthis=inter; //could be a compilation error
+			return returnthis;
+		}
+
 	}
 
 }
