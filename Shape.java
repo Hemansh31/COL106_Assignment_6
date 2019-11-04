@@ -55,17 +55,17 @@ public class Shape implements ShapeInterface
 			P_vertex va=all_vertex.search(a);
 			if(va==null){
 				va=new P_vertex(a);
-				all_vertex.add(va);
+				all_vertex.addVertex(va);
 			}
 			P_vertex vb=all_vertex.search(b);
 			if(vb==null){
 				vb=new P_vertex(b);
-				all_vertex.add(vb);
+				all_vertex.addVertex(vb);
 			}
 			P_vertex vc=all_vertex.search(c);
 			if(vc==null){
 				vc=new P_vertex(c);
-				all_vertex.add(vc);
+				all_vertex.addVertex(vc);
 			}
 			E_vertex vab=all_edge.search(ab);
 			if(vab==null){
@@ -75,7 +75,7 @@ public class Shape implements ShapeInterface
 				va.addEdge(vab);
 				vb.addEdge(vab);
 				vab.addPointVertex(va,vb);
-				all_edge.add(vab);
+				all_edge.addEdge(vab);
 			}
 			E_vertex vbc=all_edge.search(bc);
 			if(vbc==null){
@@ -85,7 +85,7 @@ public class Shape implements ShapeInterface
 				vb.addEdge(vbc);
 				vc.addEdge(vbc);
 				vbc.addPointVertex(vb,vc);
-				all_edge.add(vbc);
+				all_edge.addEdge(vbc);
 			}
 			E_vertex vca=all_edge.search(ca);
 			if(vca==null){
@@ -95,7 +95,7 @@ public class Shape implements ShapeInterface
 				va.addEdge(vca);
 				vc.addEdge(vca);
 				vca.addPointVertex(vc,va);
-				all_edge.add(vca);
+				all_edge.addEdge(vca);
 			}
 			Triangle abc=new Triangle(a,b,c,arrivaltime);
 			T_vertex vabc=all_triangle.search(abc);
@@ -108,10 +108,11 @@ public class Shape implements ShapeInterface
 				vc.addTricon(vabc);
 				transfer_triangles(vab,vabc);
 				va.addTricon(vabc);
-				transfer_triangles(vb,vabc);
+				transfer_triangles(vbc,vabc);
 				vb.addTricon(vabc);
-				transfer_triangles(vc,vabc);
+				transfer_triangles(vca,vabc);
 				vc.addTricon(vabc);
+				all_triangle.addTriangle(vabc);
 			}
 			return true;												
 		}
@@ -147,6 +148,7 @@ public class Shape implements ShapeInterface
 		else if(morethantwo!=0){
 			return 3;
 		}
+		return 0;
 	}
 
 	public Edge[] sortThisArray(Edge[] sort_this){
@@ -166,6 +168,7 @@ public class Shape implements ShapeInterface
 			Edge[] finalarray=merge(array1,array2);
 			return finalarray;
 		}
+		return null;
 	}
 	public Edge[] merge(Edge[] array1,Edge[] array2){
 		int l1=array1.length;
@@ -210,10 +213,10 @@ public class Shape implements ShapeInterface
 			}
 			temp=temp.next;
 		}
+		int bsize=edgeb.size();
 		if(bsize==0){
 			return null;
 		}
-		int bsize=edgeb.size();
 		Edge[] sortthis=new Edge[bsize];
 		v_node<Edge> temp2=edgeb.head;
 		for(int i=0;i<bsize;i++){
@@ -284,6 +287,7 @@ public class Shape implements ShapeInterface
 			Triangle[] finalarray=merge_two(array1,array2);
 			return finalarray;
 		}
+		return null;
 	}
 	public Triangle[] merge_two(Triangle[] array1,Triangle[] array2){
 		int l1=array1.length;
@@ -301,7 +305,7 @@ public class Shape implements ShapeInterface
 				cnt1++;
 			}
 			else if((cnt1<l1)&&(cnt2<l2)){
-				if((array1[cnt1].getLength())<(array2[cnt2].getLength())){
+				if((array1[cnt1].timestamp)<(array2[cnt2].timestamp)){
 					mergedarray[i]=array1[cnt1];
 					cnt1++;
 				}
@@ -319,7 +323,7 @@ public class Shape implements ShapeInterface
 		Point a=new Point(triangle_coord[0],triangle_coord[1],triangle_coord[2]);
 		Point b=new Point(triangle_coord[3],triangle_coord[4],triangle_coord[5]);
 		Point c=new Point(triangle_coord[6],triangle_coord[7],triangle_coord[8]);
-		Triangle abc=new Triangle(a,b,c);
+		Triangle abc=new Triangle(a,b,c,0);
 		T_vertex wegetthis=all_triangle.search(abc);
 		if(wegetthis==null){
 			return null;
@@ -347,7 +351,7 @@ public class Shape implements ShapeInterface
 		Point a=new Point(triangle_coord[0],triangle_coord[1],triangle_coord[2]);
 		Point b=new Point(triangle_coord[3],triangle_coord[4],triangle_coord[5]);
 		Point c=new Point(triangle_coord[6],triangle_coord[7],triangle_coord[8]);
-		Triangle abc=new Triangle(a,b,c);
+		Triangle abc=new Triangle(a,b,c,0);
 		T_vertex wegetthis=all_triangle.search(abc);
 		if(wegetthis==null){
 			return null;
@@ -368,7 +372,7 @@ public class Shape implements ShapeInterface
 		Point a=new Point(triangle_coord[0],triangle_coord[1],triangle_coord[2]);
 		Point b=new Point(triangle_coord[3],triangle_coord[4],triangle_coord[5]);
 		Point c=new Point(triangle_coord[6],triangle_coord[7],triangle_coord[8]);
-		Triangle abc=new Triangle(a,b,c);
+		Triangle abc=new Triangle(a,b,c,0);
 		T_vertex wegetthis=all_triangle.search(abc);
 		if(wegetthis==null){
 			return null;
@@ -383,11 +387,11 @@ public class Shape implements ShapeInterface
 		}		
 	}
 
-	public TriangleInterface [] EXTENDED_NEIGHBOR_TRIANGLE(float [] triangle_coord){
+	/*public TriangleInterface [] EXTENDED_NEIGHBOR_TRIANGLE(float [] triangle_coord){
 		Point a=new Point(triangle_coord[0],triangle_coord[1],triangle_coord[2]);
 		Point b=new Point(triangle_coord[3],triangle_coord[4],triangle_coord[5]);
 		Point c=new Point(triangle_coord[6],triangle_coord[7],triangle_coord[8]);
-		Triangle abc=new Triangle(a,b,c);
+		Triangle abc=new Triangle(a,b,c,0);
 		T_vertex wegetthis=all_triangle.search(abc);
 		if(wegetthis==null){
 			return null;
@@ -397,7 +401,7 @@ public class Shape implements ShapeInterface
 			P_vertex vb=wegetthis.point2;
 			P_vertex vc=wegetthis.point3;
 		}		
-	}
+	}*/
 
 }
 

@@ -30,7 +30,7 @@ class P_vertex {
 		this.owner=thisistheowner;
 		neighbours=new vector<P_vertex>();
 		edges=new vector<E_vertex>();
-		triangles=new vector<T_vertex>;
+		triangles=new vector<T_vertex>();
 	}
 	void addNeighbour(P_vertex addthis){
 		neighbours.add(addthis);
