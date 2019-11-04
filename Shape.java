@@ -117,5 +117,113 @@ public class Shape implements ShapeInterface
 		}
 	}
 
+	public int TYPE_MESH(){
+		vector<E_vertex> edgev=all_edge.edges;
+		int length=edgev.size();
+		int morethantwo=0;
+		int two=0;
+		int one=0;
+		v_node<E_vertex> temp=edgev.head;
+		for(int i=0;i<length;i++){
+			E_vertex checkthis=(E_vertex)temp.getData();
+			int triangle_num=checkthis.triangles.size();
+			if(triangle_num>2){
+				morethantwo++;
+			}
+			else if(triangle_num==2){
+				two++;
+			}
+			else{
+				one++;
+			}
+			temp=temp.next;
+		}
+		if((two!=0)&&(morethantwo==0)&&(one==0)){
+			return 1;
+		}
+		else if((morethantwo==0)&&(one!=0)){
+			return 2;
+		}
+		else if(morethantwo!=0){
+			return 3;
+		}
+	}
+
+	public Edge[] sortThisArray(Edge[] sort_this){
+		Edge[] really=merge_sort(sortthis,0,(sort_this.length-1));
+		return really;
+	}
+	public Edge[] merge_sort(Edge[] sort_this,int low,int high){
+		if(low==high){
+			Edge[] onearr=new Edge[1];
+			onearr[0]=sort_this[low];
+			return onearr;
+		}
+		else if(low<high){
+			int middle=(low+high)/2;
+			Edge[] array1=merge_sort(sort_this,low,middle);
+			Edge[] array2=merge_sort(sort_this,middle+1,high);
+			Edge[] finalarray=merge(array1,array2);
+			return finalarray;
+		}
+	}
+	public Edge[] merge(Edge[] array1,Edge[] array2){
+		int l1=array1.length;
+		int l2=array2.length;
+		Edge[] mergedarray = new Edge[(l1+l2)];
+		int cnt1=0;
+		int cnt2=0;
+		for(int i=0;i<(l1+l2);i++){
+			if((cnt1==l1)&&(cnt2<l2)){
+				mergedarray[i]=array2[cnt2];
+				cnt2++;
+			}
+			else if((cnt2==l2)&&(cnt1<l1)){
+				mergedarray[i]=array1[cnt1];
+				cnt1++;
+			}
+			else if((cnt1<l1)&&(cnt2<l2)){
+				if((array1[cnt1].getLength())<(array2[cnt2].getLength())){
+					mergedarray[i]=array1[cnt1];
+					cnt1++;
+				}
+				else{
+					mergedarray[i]=array2[cnt2];
+					cnt2++;
+				}
+			}
+		}
+		return mergedarray;
+	}
+
+	public EdgeInterface [] BOUNDARY_EDGES(){
+		vector<E_vertex> edgev=all_edge.edges;
+		int length=edgev.size();
+		v_node<E_vertex> temp=edgev.head;
+		vector<Edge> edgeb=new vector<Edge>();
+		for(int i=0;i<length;i++){
+			E_vertex checkthis=(E_vertex)temp.getData();
+			int triangle_num= checkthis.triangles.size();
+			if(triangle_num==1){
+				Edge addthis=checkthis.owner;
+				edgeb.add(addthis);
+			}
+			temp=temp.next;
+		}
+		if(bsize==0){
+			return null;
+		}
+		int bsize=edgeb.size();
+		Edge[] sortthis=new Edge[bsize];
+		v_node<Edge> temp2=edgeb.head;
+		for(int i=0;i<bsize;i++){
+			Edge insertthis=(Edge)temp2.getData();
+			sortthis[i]=insertthis;
+		}
+		Edge[] inter=sortThisArray(sortthis);
+		EdgeInterface[] returnthis=inter;
+		return returnthis;
+	}
+
 }
 

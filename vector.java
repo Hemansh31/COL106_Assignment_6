@@ -1,10 +1,11 @@
 class vector<T> {
 	v_node<T> head;
 	v_node<T> end;
-	int length=0;
+	int length;
 	vector(){
 		head=null;
 		end=null;
+		length=0;
 	}
 	void add(T addthis){
 		v_node<T> newnode=new v_node<T>(addthis);
