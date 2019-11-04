@@ -341,7 +341,62 @@ public class Shape implements ShapeInterface
 			TriangleInterface[] returnthis=inter; //could be a compilation error
 			return returnthis;
 		}
+	}
 
+	public EdgeInterface [] EDGE_NEIGHBOR_TRIANGLE(float [] triangle_coord){
+		Point a=new Point(triangle_coord[0],triangle_coord[1],triangle_coord[2]);
+		Point b=new Point(triangle_coord[3],triangle_coord[4],triangle_coord[5]);
+		Point c=new Point(triangle_coord[6],triangle_coord[7],triangle_coord[8]);
+		Triangle abc=new Triangle(a,b,c);
+		T_vertex wegetthis=all_triangle.search(abc);
+		if(wegetthis==null){
+			return null;
+		}
+		else{
+			E_vertex edge_one=wegetthis.edge1;
+			E_vertex edge_two=wegetthis.edge2;
+			E_vertex edge_three=wegetthis.edge3;
+			EdgeInterface[] returnthis=new EdgeInterface[3];
+			returnthis[0]=edge_one.owner;
+			returnthis[1]=edge_two.owner;
+			returnthis[2]=edge_three.owner;
+			return returnthis;
+		}
+	}
+
+	public PointInterface [] VERTEX_NEIGHBOR_TRIANGLE(float [] triangle_coord){
+		Point a=new Point(triangle_coord[0],triangle_coord[1],triangle_coord[2]);
+		Point b=new Point(triangle_coord[3],triangle_coord[4],triangle_coord[5]);
+		Point c=new Point(triangle_coord[6],triangle_coord[7],triangle_coord[8]);
+		Triangle abc=new Triangle(a,b,c);
+		T_vertex wegetthis=all_triangle.search(abc);
+		if(wegetthis==null){
+			return null;
+		}
+		else{
+			Triangle goodforyou=wegetthis.owner;
+			PointInterface[] returnthis=new PointInterface[3];
+			returnthis[0]=goodforyou.point1;
+			returnthis[1]=goodforyou.point2;
+			returnthis[2]=goodforyou.point3;
+			return returnthis;
+		}		
+	}
+
+	public TriangleInterface [] EXTENDED_NEIGHBOR_TRIANGLE(float [] triangle_coord){
+		Point a=new Point(triangle_coord[0],triangle_coord[1],triangle_coord[2]);
+		Point b=new Point(triangle_coord[3],triangle_coord[4],triangle_coord[5]);
+		Point c=new Point(triangle_coord[6],triangle_coord[7],triangle_coord[8]);
+		Triangle abc=new Triangle(a,b,c);
+		T_vertex wegetthis=all_triangle.search(abc);
+		if(wegetthis==null){
+			return null;
+		}
+		else{
+			P_vertex va=wegetthis.point1;
+			P_vertex vb=wegetthis.point2;
+			P_vertex vc=wegetthis.point3;
+		}		
 	}
 
 }
