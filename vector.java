@@ -1,13 +1,13 @@
 class vector<T> {
-	v_node<T> head;
-	v_node<T> end;
-	int length;
-	vector(){
+	public v_node<T> head;
+	public v_node<T> end;
+	public int length;
+	public vector(){
 		head=null;
 		end=null;
 		length=0;
 	}
-	void add(T addthis){
+	public void add(T addthis){
 		v_node<T> newnode=new v_node<T>(addthis);
 		if(head==null){
 			head=newnode;
@@ -20,7 +20,7 @@ class vector<T> {
 		}
 		length++;
 	}
-	T contains(T checkthis){
+	public T contains(T checkthis){
 		v_node<T> temp=head;
 		while(temp!=null){
 			if(checkthis.equals(temp.getData())){
@@ -32,10 +32,10 @@ class vector<T> {
 		}
 		return null;
 	}
-	int size(){
+	public int size(){
 		return length;
 	}
-	v_node<T> getNode(T containsthis){
+	public v_node<T> getNode(T containsthis){
 		v_node<T> temp=head;
 		while(temp!=null){
 			if(containsthis.equals(temp.getData())){
@@ -50,27 +50,27 @@ class vector<T> {
 }
 
 class v_node<T>{
-	T data;
-	v_node<T> next;
-	v_node<T> previous;
-	v_node(T init){
+	public T data;
+	public v_node<T> next;
+	public v_node<T> previous;
+	public v_node(T init){
 		this.data=init;
 		next=null;
 		previous=null;
 	}
-	void setNext(v_node addthis){
+	public void setNext(v_node addthis){
 		this.next=addthis;
 	}
-	void setPrevious(v_node addthis){
+	public void setPrevious(v_node addthis){
 		this.previous=addthis;
 	}
-	v_node<T> getNext(){
+	public v_node<T> getNext(){
 		return next;
 	}
-	v_node<T> getPrevious(){
+	public v_node<T> getPrevious(){
 		return previous;
 	}
-	T getData(){
+	public T getData(){
 		return data;
 	}
 }

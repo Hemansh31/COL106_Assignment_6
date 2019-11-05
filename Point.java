@@ -1,7 +1,7 @@
 class Point implements PointInterface {
-	float X_coordinate;
-	float Y_coordinate;
-	float Z_coordinate;
+	public float X_coordinate;
+	public float Y_coordinate;
+	public float Z_coordinate;
 
 	public Point(float a,float b,float c){
 		this.X_coordinate=a;

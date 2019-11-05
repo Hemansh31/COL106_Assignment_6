@@ -1,12 +1,12 @@
 class Triangle implements TriangleInterface {
 
-	Point point1;
+	public Point point1;
 
-	Point point2;
+	public Point point2;
 
-	Point point3;
+	public Point point3;
 
-	int timestamp;
+	public int timestamp;
 	public Triangle(Point a,Point b,Point c,int arrivaltime){
 		this.point1=a;
 		this.point2=b;

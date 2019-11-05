@@ -1,8 +1,8 @@
 class Edge implements EdgeInterface {
 
-	Point Point1;
+	public Point Point1;
 
-	Point Point2;
+	public Point Point2;
 
 	public Edge(Point p1,Point p2){
 		this.Point1=p1;

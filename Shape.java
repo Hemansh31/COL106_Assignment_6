@@ -35,6 +35,7 @@ public class Shape implements ShapeInterface
 		while(temp!=null){
 			T_vertex addthis=(T_vertex)temp.getData();
 			abc.addTricon(addthis);
+			addthis.addTricon(abc);
 			temp=temp.next;
 		}
 	}
@@ -387,12 +388,13 @@ public class Shape implements ShapeInterface
 		}		
 	}
 
-	/*public TriangleInterface [] EXTENDED_NEIGHBOR_TRIANGLE(float [] triangle_coord){
+	public TriangleInterface [] EXTENDED_NEIGHBOR_TRIANGLE(float [] triangle_coord){
 		Point a=new Point(triangle_coord[0],triangle_coord[1],triangle_coord[2]);
 		Point b=new Point(triangle_coord[3],triangle_coord[4],triangle_coord[5]);
 		Point c=new Point(triangle_coord[6],triangle_coord[7],triangle_coord[8]);
 		Triangle abc=new Triangle(a,b,c,0);
 		T_vertex wegetthis=all_triangle.search(abc);
+		vector<T_vertex> interim=new vector<T_vertex>();
 		if(wegetthis==null){
 			return null;
 		}
@@ -400,8 +402,83 @@ public class Shape implements ShapeInterface
 			P_vertex va=wegetthis.point1;
 			P_vertex vb=wegetthis.point2;
 			P_vertex vc=wegetthis.point3;
+			vector<T_vertex> terminal_one=va.triangles;
+			v_node<T_vertex> temp_one=terminal_one.head;
+			while(temp_one!=null){
+				T_vertex love=(T_vertex)temp_one.getData();
+				if((love.point1.equals(vb))||(love.point2.equals(vb))||(love.point3.equals(vb))){
+					temp_one=temp_one.next;
+				}
+				else{
+					interim.add(love);
+					temp_one=temp_one.next;
+				}
+			}
+			vector<T_vertex> terminal_two=vb.triangles;
+			v_node<T_vertex> temp_two=terminal_two.head;
+			while(temp_two!=null){
+				T_vertex love=(T_vertex)temp_two.getData();
+				if((love.point1.equals(vc))||(love.point2.equals(vc))||(love.point3.equals(vc))){
+					temp_two=temp_two.next;
+				}
+				else{
+					interim.add(love);
+					temp_two=temp_two.next;
+				}
+			}
+			vector<T_vertex> terminal_three=vc.triangles;
+			v_node<T_vertex> temp_three=terminal_three.head;
+			while(temp_three!=null){
+				T_vertex love=(T_vertex)temp_three.getData();
+				if((love.point1.equals(va))||(love.point2.equals(va))||(love.point3.equals(va))){
+					temp_three=temp_three.next;
+				}
+				else{
+					interim.add(love);
+					temp_three=temp_three.next;
+				}
+			}
+			int length=interim.size();
+			Triangle[] sorthis=new Triangle[length];
+			v_node<T_vertex> temp=interim.head;
+			int index=0;
+			while(temp!=null){
+				T_vertex trythis=(T_vertex)temp.getData();
+				Triangle fuck=trythis.owner;
+				sortthis[index]=fuck;
+				index++;
+				temp=temp.next;
+			}	
+			Triangle[] inter=sortThisArray_two(sortthis);
+			TriangleInterface[] returnthis=inter; //could be a compilation error
+			return returnthis;					
 		}		
-	}*/
+	}
+
+	public TriangleInterface [] INCIDENT_TRIANGLES(float [] point_coordinates){
+		Point a=new Point(point_coordinates[0],point_coordinates[1],point_coordinates[2]);
+		P_vertex wegetthis=all_vertex.search(a);
+		if(wegetthis==null){
+			return null;
+		}
+		else{
+			vector<T_vertex> interim=wegetthis.triangles;
+			int length=interim.size();
+			Triangle[] sorthis=new Triangle[length];
+			v_node<T_vertex> temp=interim.head;
+			int index=0;
+			while(temp!=null){
+				T_vertex trythis=(T_vertex)temp.getData();
+				Triangle fuck=trythis.owner;
+				sortthis[index]=fuck;
+				index++;
+				temp=temp.next;
+			}	
+			Triangle[] inter=sortThisArray_two(sortthis);
+			TriangleInterface[] returnthis=inter; //could be a compilation error
+			return returnthis;	
+		}
+	}
 
 }
 
