@@ -35,5 +35,10 @@ class Point implements PointInterface {
 			return false;
 		}
 	}
+	@Override
+	public String toString(){
+		String answer="( "+(int)X_coordinate+" "+(int)Y_coordinate+" "+(int)Z_coordinate+" )";
+		return answer;
+	}
 
 }
