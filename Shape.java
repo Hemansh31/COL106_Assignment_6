@@ -641,7 +641,7 @@ public class Shape implements ShapeInterface
 		}
 	}
 
-	public void depth_traversal_2(T_vertex tempo,shape_comp gay){
+	/*public void depth_traversal_2(T_vertex tempo,shape_comp gay){
 		if(tempo.V_status==true){
 			return;
 		}
@@ -653,42 +653,318 @@ public class Shape implements ShapeInterface
 			v_node<T_vertex> temp=helpme.head;
 			for(int i=0;i<iterations;i++){
 				T_vertex trythis=(T_vertex)temp.getData();
-				depth_traversal(trythis,gay);
+				depth_traversal_2(trythis,gay);
 				temp=temp.next;
 			}
 		}		
+	}*/
+
+	public int bfs(T_vertex vabc1){
+		//System.out.println(all_triangle.triangles.size());
+		vector<T_vertex> queue=new vector<T_vertex>();
+		queue.add(vabc1);
+		v_node<T_vertex> temp=queue.head;
+		int max=0;
+		while(temp!=null){
+			T_vertex violet=(T_vertex)temp.getData();
+			violet.V_status=true;
+			vector<T_vertex> wtf=violet.padosi;
+				//System.out.println(wtf.size());
+				int distance=violet.dist;
+				
+				if(distance>max){
+					max=distance;
+				}
+				v_node<T_vertex> become=wtf.head;
+				while(become!=null){
+					T_vertex name=(T_vertex)become.getData();
+					if(name.V_status==false){
+						queue.add(name);
+						name.V_status=true;
+						//System.out.println("d"+(distance+1));
+						name.dist=distance+1;
+					}
+					become=become.next;
+				}
+			temp=temp.next;
+		}
+			/*if(violet.V_status==true){
+				//System.out.println("d");
+				temp=temp.next;
+			}
+			else{
+				violet.V_status=true;
+				vector<T_vertex> wtf=violet.padosi;
+				//System.out.println(wtf.size());
+				int distance=violet.dist;
+				
+				if(distance>max){
+					max=distance;
+				}
+				v_node<T_vertex> become=wtf.head;
+				while(become!=null){
+					T_vertex name=(T_vertex)become.getData();
+
+					if(name.A_status==false){
+						//System.out.println(name.owner);
+						queue.add(name);
+						name.A_status=true;
+						//System.out.println("d"+(distance+1));
+						name.dist=distance+1;
+					}
+					become=become.next;
+				}
+				temp=temp.next;
+			}*/
+
+		
+		//System.out.println(max);
+		return max;
 	}
 
 	public int MAXIMUM_DIAMETER(){
 		vector<T_vertex> ctricon=all_triangle.triangles;
 		v_node<T_vertex> temp=ctricon.head;
-		vector<shape_comp> innovation=new vector<shape_comp>();
+		int max=0;
 		while(temp!=null){
+			T_vertex usethis=(T_vertex)temp.getData();
+			int getthis=bfs(usethis);
+			if(getthis>max){
+				max=getthis;
+			}
+			else{
+				;
+			}
+			v_node<T_vertex> temp2=ctricon.head;
+			while(temp2!=null){
+				T_vertex rip=(T_vertex)temp2.getData();
+				rip.V_status=false;
+				rip.A_status=false;
+				rip.dist=0;
+				temp2=temp2.next;
+			}
+			temp=temp.next;
+		}
+		System.out.println(max);
+		return max;
+	}
+
+
+	public void depth_traversal_3(T_vertex tempo,Point you,vector<P_vertex> helpmetoo){
+		if(tempo.V_status==true){
+			return;
+		}
+		else{
+			vector<T_vertex> helpme=tempo.padosi;
+			tempo.V_status=true;
+			P_vertex p1=tempo.point1;
+			P_vertex p2=tempo.point2;
+			P_vertex p3=tempo.point3;
+			if(p1.V_status==false){
+				p1.V_status=true;
+				Point owner=p1.owner;
+				you.X_coordinate+=owner.getX();
+				you.Y_coordinate+=owner.getY();
+				you.Z_coordinate+=owner.getZ();
+				helpmetoo.add(p1);
+			}
+			if(p2.V_status==false){
+				p2.V_status=true;
+				Point owner=p2.owner;
+				you.X_coordinate+=owner.getX();
+				you.Y_coordinate+=owner.getY();
+				you.Z_coordinate+=owner.getZ();
+				helpmetoo.add(p2);
+			}
+			if(p3.V_status==false){
+				p3.V_status=true;
+				Point owner=p3.owner;
+				you.X_coordinate+=owner.getX();
+				you.Y_coordinate+=owner.getY();
+				you.Z_coordinate+=owner.getZ();
+				helpmetoo.add(p3);
+			}
+			int iterations=helpme.size();
+			v_node<T_vertex> temp=helpme.head;
+			for(int i=0;i<iterations;i++){
+				T_vertex trythis=(T_vertex)temp.getData();
+				depth_traversal_3(trythis,you,helpmetoo);
+				temp=temp.next;
+			}
+		}		
+	}
+
+	public PointInterface [] CENTROID (){
+		vector<T_vertex> ctricon=all_triangle.triangles;
+		v_node<T_vertex> temp=ctricon.head;
+		vector<Point> all_average=new vector<Point>();
+		while(temp!=null){
+			vector<P_vertex> jjthomp=new vector<P_vertex>();
+			Point record=new Point(0.0,0.0,0.0);
 			T_vertex subject=(T_vertex)temp.getData();
-			shape_comp addthis=new shape_comp();
 			if((subject.V_status)==true){
 				temp=temp.next;
 			}
 			else{
-				depth_traversal_2(subject,addthis);
-				innovation.add(addthis);
-				temp=temp.next;
+				depth_traversal_3(subject,record,jjthomp);
+				int divisor=jjthomp.size();//confirm before submission
+				record.X_coordinate/=divisor;
+				record.Y_coordinate/=divisor;
+				record.Z_coordinate/=divisor;
+				all_average.add(record);
+				v_node<P_vertex> kk=jjthomp.head;
+				while(kk!=null){
+					P_vertex bad=(P_vertex)kk.getData();
+					bad.V_status=false;
+				}
+				temp=temp.next;				
 			}
 		}
+		Point[] sortthis=P_SORT(all_average);
 		v_node<T_vertex> temp2=ctricon.head;
 		while(temp2!=null){
 			T_vertex subject=(T_vertex)temp2.getData();
 			subject.V_status=false;
 			temp2=temp2.next;
 		}
-		v_node<shape_comp> gud=innovation.head;
-		int ohh=innovation.size();
-		int[] distance=new int[ohh];
-		while(gud!=null){
-			vector<T_vertex> motherfucker=gud.
-		}
+		PointInterface[] returnthis=sortthis;
+		return returnthis;
 
 	}
 
+	public PointInterface CENTROID_OF_COMPONENT (float [] point_coordinates){
+		Point outofnames=new Point(point_coordinates[0],point_coordinates[1],point_coordinates[2]);
+		P_vertex wegetthis=all_vertex.search(outofnames);
+		if(wegetthis==null){
+			return null;
+		}
+		else{
+			v_node<T_vertex> temp=wegetthis.triangles.head;
+			vector<P_vertex> jjthomp=new vector<P_vertex>();
+			Point record=new Point(0.0,0.0,0.0);
+			T_vertex subject=(T_vertex)temp.getData();
+
+			depth_traversal_3(subject,record,jjthomp);
+			int divisor=jjthomp.size();//confirm before submission
+			record.X_coordinate/=divisor;
+			record.Y_coordinate/=divisor;
+			record.Z_coordinate/=divisor;
+			all_average.add(record);
+			v_node<P_vertex> kk=jjthomp.head;
+			while(kk!=null){
+				P_vertex bad=(P_vertex)kk.getData();
+				bad.V_status=false;
+			}
+			return record;
+		}
+	}
+
+	public void depth_traversal_final(T_vertex tempo,vector<P_vertex> tuck){
+		if(tempo.V_status==true){
+			return;
+		}
+		else{
+			vector<T_vertex> helpme=tempo.padosi;
+			tempo.V_status=true;
+			P_vertex p1=tempo.point1;
+			P_vertex p2=tempo.point2;
+			P_vertex p3=tempo.point3;
+			if(p1.V_status==false){
+				p1.V_status=true;
+				tuck.add(p1);
+			}
+			if(p2.V_status==false){
+				p2.V_status=true;
+				tuck.add(p2);
+			}
+			if(p3.V_status==false){
+				p3.V_status=true;
+				tuck.add(p3);
+			}
+			int iterations=helpme.size();
+			v_node<T_vertex> temp=helpme.head;
+			for(int i=0;i<iterations;i++){
+				T_vertex trythis=(T_vertex)temp.getData();
+				depth_traversal_final(trythis,tuck);
+				temp=temp.next;
+			}
+		}		
+	}
+
+
+	public 	PointInterface [] CLOSEST_COMPONENTS(){
+		vector<T_vertex> war_cry=all_triangle.triangles;
+		v_node<T_vertex> soldier=war_cry.head;
+		vector<vector<P_vertex>> major=new vector<vector<P_vertex>>();
+		int indexing=0;
+		while(soldier!=null){
+			T_vertex weapon=(T_vertex)soldier.getData();
+			if(weapon.V_status==true){
+				soldier=soldier.next;
+			}
+			else{
+				vector<P_vertex> bomb=new vector<P_vertex>();
+				depth_traversal_final(weapon,bomb);
+				bomb.index=indexing;
+				major.add(bomb);
+				v_node<P_vertex> chick=bomb.head;
+				while(chick!=null){
+					P_vertex gal=(P_vertex)chick.getData();
+					gal.V_status=false;
+					chick=chick.next;
+				}
+				indexing++;
+				soldier=soldier.next;
+			}
+		}
+		int size_one=major.size();
+		float g_min=-(9.0);
+		P_vertex lelo=null;
+		P_vertex dedo=null;
+		v_node<vector<P_vertex>> naah=major.head;
+		while(naah!=null){
+			vector<P_vertex> list=(vector<P_vertex>)naah.getData();
+			v_node<vector<P_vertex>> haan=major.head;
+			while(haan!=null){
+				vector<P_vertex> mist=(vector<P_vertex>)naah.getData();
+				if((list.index)==(mist.index)){
+					haan=haan.next;
+				}
+				else{
+					v_node<P_vertex> wela=list.head;
+					while(wela!=null){
+						v_node<P_vertex> weli=mist.head;
+						P_vertex outer=(P_vertex)wela.getData();
+						while(weli!=null){
+							P_vertex inner=(P_vertex)weli.getData();
+							float comparison=calculator(outer,inner);
+							if(g_min<0||lelo==null||dedo==null){
+								g_min=comparison;
+								lelo=inner;
+								dedo=outer;
+							}
+							else{
+								if(comparison<g_min){
+									g_min=comparison;
+									lelo=inner;
+									dedo=outer;
+								}
+							}
+							weli=weli.next;
+						}
+						wela=wela.next;
+					}
+				}
+				haan=haan.next;
+			}
+			naah=naah.next;
+		}
+		Point r1=lelo.owner;
+		Point r2=dedo.owner;
+		PointInterface[] returnthis=new PointInterface[2];
+		returnthis[0]=r1;
+		returnthis[1]=r2;
+		return returnthis;
+	}
 }
 

@@ -22,6 +22,8 @@ class TriangleGraph{
 class T_vertex {
 	Triangle owner;
 	boolean V_status=false;
+	boolean A_status=false;
+	int dist=0;
 	vector<T_vertex> padosi;
 	P_vertex point1;
 	P_vertex point2;

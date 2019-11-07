@@ -2,6 +2,7 @@ class vector<T> {
 	public v_node<T> head;
 	public v_node<T> end;
 	public int length;
+	public int index=0;
 	public vector(){
 		head=null;
 		end=null;
