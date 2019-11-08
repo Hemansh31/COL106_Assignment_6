@@ -37,8 +37,32 @@ class Point implements PointInterface {
 	}
 	@Override
 	public String toString(){
-		String answer="( "+(int)X_coordinate+" "+(int)Y_coordinate+" "+(int)Z_coordinate+" )";
+		String answer="( "+X_coordinate+" "+Y_coordinate+" "+Z_coordinate+" )";
 		return answer;
+	}
+
+	public int compare(Point p1){
+		if((X_coordinate)>(p1.getX())){
+			return 1;
+		}
+		else if((X_coordinate)<(p1.getX())){
+			return -1;
+		}
+		else if((Y_coordinate)>(p1.getY())){
+			return 1;
+		}
+		else if((Y_coordinate)<(p1.getY())){
+			return -1;
+		}
+		else if((Z_coordinate)>(p1.getZ())){
+			return 1;
+		}
+		else if((Z_coordinate)<(p1.getZ())){
+			return -1;
+		}
+		else{
+			return 0;
+		}
 	}
 
 }

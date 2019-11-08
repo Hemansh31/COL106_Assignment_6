@@ -18,14 +18,14 @@ public class Shape implements ShapeInterface
 		float a=ab.getLength();
 		float b=bc.getLength();
 		float c=ca.getLength();
-		boolean b1=(a+b>c);
-		boolean b2=(a+c>b);
-		boolean b3=(b+c>a);
-		if(b1&&b2&&b3){
-			return true;
+		boolean b1=((a+b-c)<((float)(0.001)))&&((a+b-c))>((float)(-0.01));
+		boolean b2=((b+c-a)<((float)(0.001)))&&((b+c-a))>((float)(-0.01));
+		boolean b3=((c+a-b)<((float)(0.001)))&&((c+a-b))>((float)(-0.01));
+		if(b1||b2||b3){
+			return false;
 		}
 		else{
-			return false;
+			return true;
 		}
 	}
 
@@ -659,7 +659,7 @@ public class Shape implements ShapeInterface
 		}		
 	}*/
 
-	public int bfs(T_vertex vabc1){
+	public int bfs(T_vertex vabc1,vector<T_vertex> update){
 		//System.out.println(all_triangle.triangles.size());
 		vector<T_vertex> queue=new vector<T_vertex>();
 		queue.add(vabc1);
@@ -719,21 +719,29 @@ public class Shape implements ShapeInterface
 
 		
 		//System.out.println(max);
+		update=queue;
+		//System.out.println(queue.size());
 		return max;
 	}
 
 	public int MAXIMUM_DIAMETER(){
 		vector<T_vertex> ctricon=all_triangle.triangles;
 		v_node<T_vertex> temp=ctricon.head;
+		vector<T_vertex> pass_this=new vector<T_vertex>();
 		int max=0;
+		int maxsize=0;
 		while(temp!=null){
 			T_vertex usethis=(T_vertex)temp.getData();
-			int getthis=bfs(usethis);
-			if(getthis>max){
+			int getthis=bfs(usethis,pass_this);
+			int maxs=pass_this.size();
+			if(maxs>maxsize){
+				maxsize=maxs;
 				max=getthis;
 			}
-			else{
-				;
+			else if(maxs==maxsize){
+				if(getthis>max){
+					max=getthis;
+				}
 			}
 			v_node<T_vertex> temp2=ctricon.head;
 			while(temp2!=null){
@@ -743,9 +751,11 @@ public class Shape implements ShapeInterface
 				rip.dist=0;
 				temp2=temp2.next;
 			}
+			
 			temp=temp.next;
 		}
-		System.out.println(max);
+			
+		//System.out.println(max);
 		return max;
 	}
 
@@ -794,13 +804,75 @@ public class Shape implements ShapeInterface
 		}		
 	}
 
+	public Point[] P_SORT(vector<Point> under){
+		int array_size=under.size();
+		Point [] sort_this=new Point[array_size];
+		v_node<Point> temp=under.head;
+		int index=0;
+		while(temp!=null){
+			Point db=(Point)temp.getData();
+			sort_this[index]=db;
+			temp=temp.next;
+		}
+		Point[] returnthis=sortThisArray_three(sort_this);
+		return returnthis;
+	}
+
+	public Point[] sortThisArray_three(Point[] sort_this){
+		Point[] really=merge_sort_three(sort_this,0,(sort_this.length-1));
+		return really;
+	}
+	public Point[] merge_sort_three(Point[] sort_this,int low,int high){
+		if(low==high){
+			Point[] onearr=new Point[1];
+			onearr[0]=sort_this[low];
+			return onearr;
+		}
+		else if(low<high){
+			int middle=(low+high)/2;
+			Point[] array1=merge_sort_three(sort_this,low,middle);
+			Point[] array2=merge_sort_three(sort_this,middle+1,high);
+			Point[] finalarray=merge_three(array1,array2);
+			return finalarray;
+		}
+		return null;
+	}
+	public Point[] merge_three(Point[] array1,Point[] array2){
+		int l1=array1.length;
+		int l2=array2.length;
+		Point[] mergedarray = new Point[(l1+l2)];
+		int cnt1=0;
+		int cnt2=0;
+		for(int i=0;i<(l1+l2);i++){
+			if((cnt1==l1)&&(cnt2<l2)){
+				mergedarray[i]=array2[cnt2];
+				cnt2++;
+			}
+			else if((cnt2==l2)&&(cnt1<l1)){
+				mergedarray[i]=array1[cnt1];
+				cnt1++;
+			}
+			else if((cnt1<l1)&&(cnt2<l2)){
+				if((array1[cnt1].compare(array2[cnt2]))==-1){
+					mergedarray[i]=array1[cnt1];
+					cnt1++;
+				}
+				else{
+					mergedarray[i]=array2[cnt2];
+					cnt2++;
+				}
+			}
+		}
+		return mergedarray;
+	}
+
 	public PointInterface [] CENTROID (){
 		vector<T_vertex> ctricon=all_triangle.triangles;
 		v_node<T_vertex> temp=ctricon.head;
 		vector<Point> all_average=new vector<Point>();
 		while(temp!=null){
 			vector<P_vertex> jjthomp=new vector<P_vertex>();
-			Point record=new Point(0.0,0.0,0.0);
+			Point record=new Point(0,0,0);
 			T_vertex subject=(T_vertex)temp.getData();
 			if((subject.V_status)==true){
 				temp=temp.next;
@@ -841,22 +913,36 @@ public class Shape implements ShapeInterface
 		else{
 			v_node<T_vertex> temp=wegetthis.triangles.head;
 			vector<P_vertex> jjthomp=new vector<P_vertex>();
-			Point record=new Point(0.0,0.0,0.0);
+			Point record=new Point((float)0,(float)0,(float)0);
 			T_vertex subject=(T_vertex)temp.getData();
-
+			//System.out.println("Hey");
 			depth_traversal_3(subject,record,jjthomp);
-			int divisor=jjthomp.size();//confirm before submission
+			//System.out.println("Hey1");
+			float divisor=(float)(jjthomp.size());//confirm before submission
+			System.out.println(record);
+			System.out.println(divisor);
 			record.X_coordinate/=divisor;
 			record.Y_coordinate/=divisor;
 			record.Z_coordinate/=divisor;
-			all_average.add(record);
+			//all_average.add(record);
 			v_node<P_vertex> kk=jjthomp.head;
 			while(kk!=null){
 				P_vertex bad=(P_vertex)kk.getData();
 				bad.V_status=false;
+				kk=kk.next;
 			}
+			//System.out.println(record);
+			vector<T_vertex> war_cry=all_triangle.triangles;
+			v_node<T_vertex> soldier=war_cry.head;
+			while(soldier!=null){
+			T_vertex weapon=(T_vertex)soldier.getData();
+			weapon.V_status=false;
+			soldier=soldier.next;
+		}
 			return record;
 		}
+		
+
 	}
 
 	public void depth_traversal_final(T_vertex tempo,vector<P_vertex> tuck){
@@ -883,7 +969,7 @@ public class Shape implements ShapeInterface
 			}
 			int iterations=helpme.size();
 			v_node<T_vertex> temp=helpme.head;
-			for(int i=0;i<iterations;i++){
+			while(temp!=null){
 				T_vertex trythis=(T_vertex)temp.getData();
 				depth_traversal_final(trythis,tuck);
 				temp=temp.next;
@@ -891,18 +977,28 @@ public class Shape implements ShapeInterface
 		}		
 	}
 
+	public float calculator(P_vertex outer,P_vertex inner){
+		Point owner1=outer.owner;
+		Point owner2=inner.owner;
+		Edge forget=new Edge(owner1,owner2);
+		return forget.getLength();
+	}
 
 	public 	PointInterface [] CLOSEST_COMPONENTS(){
 		vector<T_vertex> war_cry=all_triangle.triangles;
 		v_node<T_vertex> soldier=war_cry.head;
 		vector<vector<P_vertex>> major=new vector<vector<P_vertex>>();
 		int indexing=0;
+		int tree=0;
+		//System.out.println(war_cry.size());
 		while(soldier!=null){
 			T_vertex weapon=(T_vertex)soldier.getData();
 			if(weapon.V_status==true){
+				tree++;
 				soldier=soldier.next;
 			}
 			else{
+				indexing++;
 				vector<P_vertex> bomb=new vector<P_vertex>();
 				depth_traversal_final(weapon,bomb);
 				bomb.index=indexing;
@@ -913,33 +1009,44 @@ public class Shape implements ShapeInterface
 					gal.V_status=false;
 					chick=chick.next;
 				}
-				indexing++;
+				
 				soldier=soldier.next;
 			}
 		}
 		int size_one=major.size();
-		float g_min=-(9.0);
+		//System.out.println(indexing);
+		//System.out.println(tree);
+		float g_min=(float)(-9);
 		P_vertex lelo=null;
 		P_vertex dedo=null;
 		v_node<vector<P_vertex>> naah=major.head;
 		while(naah!=null){
+			//System.out.println("L1");
 			vector<P_vertex> list=(vector<P_vertex>)naah.getData();
 			v_node<vector<P_vertex>> haan=major.head;
+			//System.out.println(list.index);
 			while(haan!=null){
-				vector<P_vertex> mist=(vector<P_vertex>)naah.getData();
+				//System.out.println("L2");
+				vector<P_vertex> mist=(vector<P_vertex>)haan.getData();
+				//System.out.println(list.index);
 				if((list.index)==(mist.index)){
+					//System.out.println("L5");
 					haan=haan.next;
 				}
+				
 				else{
 					v_node<P_vertex> wela=list.head;
 					while(wela!=null){
+						//System.out.println("L3");
 						v_node<P_vertex> weli=mist.head;
 						P_vertex outer=(P_vertex)wela.getData();
 						while(weli!=null){
+							//System.out.println("L4");
 							P_vertex inner=(P_vertex)weli.getData();
 							float comparison=calculator(outer,inner);
 							if(g_min<0||lelo==null||dedo==null){
 								g_min=comparison;
+								//System.out.println(comparison);
 								lelo=inner;
 								dedo=outer;
 							}
@@ -954,16 +1061,22 @@ public class Shape implements ShapeInterface
 						}
 						wela=wela.next;
 					}
+					haan=haan.next;
 				}
-				haan=haan.next;
+				//haan=haan.next;			
 			}
 			naah=naah.next;
+		}
+		if(lelo==null||dedo==null){
+			return null;
 		}
 		Point r1=lelo.owner;
 		Point r2=dedo.owner;
 		PointInterface[] returnthis=new PointInterface[2];
 		returnthis[0]=r1;
 		returnthis[1]=r2;
+		//System.out.println(r1);
+		//System.out.println(r2);
 		return returnthis;
 	}
 }
