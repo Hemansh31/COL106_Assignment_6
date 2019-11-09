@@ -162,51 +162,94 @@ public class Shape implements ShapeInterface
 	}
 
 	public Edge[] sortThisArray(Edge[] sort_this){
-		Edge[] really=merge_sort(sort_this,0,(sort_this.length-1));
-		return really;
+		merge_sort(sort_this,0,(sort_this.length-1));
+		return sort_this;
 	}
-	public Edge[] merge_sort(Edge[] sort_this,int low,int high){
-		if(low==high){
-			Edge[] onearr=new Edge[1];
-			onearr[0]=sort_this[low];
-			return onearr;
-		}
-		else if(low<high){
+	public void merge_sort(Edge[] sort_this,int low,int high){
+		if(low<high){
 			int middle=(low+high)/2;
-			Edge[] array1=merge_sort(sort_this,low,middle);
-			Edge[] array2=merge_sort(sort_this,middle+1,high);
-			Edge[] finalarray=merge(array1,array2);
-			return finalarray;
+			merge_sort(sort_this,low,middle);
+			merge_sort(sort_this,middle+1,high);
+			merge(sort_this,low,middle,high);
 		}
-		return null;
+
+		// if(low==high){
+		// 	Edge[] onearr=new Edge[1];
+		// 	onearr[0]=sort_this[low];
+		// 	return onearr;
+		// }
+		// else if(low<high){
+		// 	int middle=(low+high)/2;
+		// 	Edge[] array1=merge_sort(sort_this,low,middle);
+		// 	Edge[] array2=merge_sort(sort_this,middle+1,high);
+		// 	Edge[] finalarray=merge(array1,array2);
+		// 	return finalarray;
+		// }
+		// return null;
 	}
-	public Edge[] merge(Edge[] array1,Edge[] array2){
-		int l1=array1.length;
-		int l2=array2.length;
-		Edge[] mergedarray = new Edge[(l1+l2)];
+	public void merge(Edge[] sort_this,int low,int middle,int high){
+		int l1=middle-low+1;
+		int l2=high-middle;
+		Edge[] j1=new Edge[l1];
+		Edge[] j2=new Edge[l2];
+		for (int i=0; i<l1; ++i){
+			 j1[i] = sort_this[low + i]; 
+		} 
+        for (int i=0; i<l2; ++i){
+			 j2[i] = sort_this[middle+1 + i]; 
+		}   
 		int cnt1=0;
 		int cnt2=0;
-		for(int i=0;i<(l1+l2);i++){
-			if((cnt1==l1)&&(cnt2<l2)){
-				mergedarray[i]=array2[cnt2];
-				cnt2++;
-			}
-			else if((cnt2==l2)&&(cnt1<l1)){
-				mergedarray[i]=array1[cnt1];
+		int cnt3=low;
+		while(cnt1<l1&&cnt2<l2){
+			if((j1[cnt1].getLength())<(j2[cnt2].getLength())){
+				sort_this[cnt3]=j1[cnt1];
 				cnt1++;
 			}
-			else if((cnt1<l1)&&(cnt2<l2)){
-				if((array1[cnt1].getLength())<(array2[cnt2].getLength())){
-					mergedarray[i]=array1[cnt1];
-					cnt1++;
-				}
-				else{
-					mergedarray[i]=array2[cnt2];
-					cnt2++;
-				}
+			else{
+				sort_this[cnt3]=j2[cnt2];
+				cnt2++;
 			}
+			cnt3++;
 		}
-		return mergedarray;
+		while (cnt1 < l1) 
+        { 
+            sort_this[cnt3] = j1[cnt1]; 
+            cnt1++; 
+            cnt3++; 
+        } 
+        while (cnt2 < l2) 
+        { 
+            sort_this[cnt3] = j2[cnt2]; 
+            cnt2++; 
+            cnt3++; 
+        } 
+		// int l1=array1.length;
+		// int l2=array2.length;
+		// Edge[] mergedarray = new Edge[(l1+l2)];
+		// int cnt1=0;
+		// int cnt2=0;
+		// for(int i=0;i<(l1+l2);i++){
+		// 	if((cnt1==l1)&&(cnt2<l2)){
+		// 		mergedarray[i]=array2[cnt2];
+		// 		cnt2++;
+		// 	}
+		// 	else if((cnt2==l2)&&(cnt1<l1)){
+		// 		mergedarray[i]=array1[cnt1];
+		// 		cnt1++;
+		// 	}
+		// 	else if((cnt1<l1)&&(cnt2<l2)){
+		// 		if((array1[cnt1].getLength())<(array2[cnt2].getLength())){
+		// 			mergedarray[i]=array1[cnt1];
+		// 			cnt1++;
+		// 		}
+		// 		else{
+		// 			mergedarray[i]=array2[cnt2];
+		// 			cnt2++;
+		// 		}
+		// 	}
+		// }
+		// return mergedarray;
 	}
 
 	public EdgeInterface [] BOUNDARY_EDGES(){
@@ -246,7 +289,7 @@ public class Shape implements ShapeInterface
 	}
 
 	public void depth_traversal(T_vertex tempo){
-		if(tempo.V_status==true){
+		/*if(tempo.V_status==true){
 			return;
 		}
 		else{
@@ -259,7 +302,29 @@ public class Shape implements ShapeInterface
 				depth_traversal(trythis);
 				temp=temp.next;
 			}
-		}		
+		}*/
+		vector<T_vertex> queue=new vector<T_vertex>();
+		queue.add(tempo);
+		v_node<T_vertex> temp=queue.head;
+		//boolean found=false;
+		while(temp!=null){
+			T_vertex searchthis=(T_vertex)temp.getData();
+				searchthis.V_status=true;
+				vector<T_vertex> new_padosi=searchthis.padosi;
+				int length=new_padosi.size();
+				v_node<T_vertex> temp2=new_padosi.head;
+				for(int i=0;i<length;i++){
+					T_vertex addthis=(T_vertex)temp2.getData();
+					if(addthis.V_status==false){
+						queue.add(addthis);
+					}					
+					temp2=temp2.next;
+				}
+				temp=temp.next;
+			
+			//temp=temp.next;
+		}
+
 	}
 
 	public int COUNT_CONNECTED_COMPONENTS(){
@@ -277,7 +342,7 @@ public class Shape implements ShapeInterface
 				temp=temp.next;
 			}
 		}
-		v_node<T_vertex> temp2=ctricon.head;
+		v_node<T_vertex> temp2=all_triangle.triangles.head;
 		while(temp2!=null){
 			T_vertex subject=(T_vertex)temp2.getData();
 			subject.V_status=false;
@@ -287,51 +352,98 @@ public class Shape implements ShapeInterface
 	}
 
 	public Triangle[] sortThisArray_two(Triangle[] sort_this){
-		Triangle[] really=merge_sort_two(sort_this,0,(sort_this.length-1));
-		return really;
+		merge_sort_two(sort_this,0,(sort_this.length-1));
+		//System.out.println("t1");
+		return sort_this;
 	}
-	public Triangle[] merge_sort_two(Triangle[] sort_this,int low,int high){
-		if(low==high){
-			Triangle[] onearr=new Triangle[1];
-			onearr[0]=sort_this[low];
-			return onearr;
-		}
-		else if(low<high){
+	public void merge_sort_two(Triangle[] sort_this,int low,int high){
+
+		if(low<high){
 			int middle=(low+high)/2;
-			Triangle[] array1=merge_sort_two(sort_this,low,middle);
-			Triangle[] array2=merge_sort_two(sort_this,middle+1,high);
-			Triangle[] finalarray=merge_two(array1,array2);
-			return finalarray;
+			merge_sort_two(sort_this,low,middle);
+			merge_sort_two(sort_this,middle+1,high);
+			merge_two(sort_this,low,middle,high);
 		}
-		return null;
+
+		// if(low==high){
+		// 	Triangle[] onearr=new Triangle[1];
+		// 	onearr[0]=sort_this[low];
+		// 	return onearr;
+		// }
+		// else if(low<high){
+		// 	int middle=(low+high)/2;
+		// 	Triangle[] array1=merge_sort_two(sort_this,low,middle);
+		// 	Triangle[] array2=merge_sort_two(sort_this,middle+1,high);
+		// 	Triangle[] finalarray=merge_two(array1,array2);
+		// 	return finalarray;
+		// }
+		// return null;
 	}
-	public Triangle[] merge_two(Triangle[] array1,Triangle[] array2){
-		int l1=array1.length;
-		int l2=array2.length;
-		Triangle[] mergedarray = new Triangle[(l1+l2)];
+	public void merge_two(Triangle[] sort_this,int low,int middle,int high){
+
+		int l1=middle-low+1;
+		int l2=high-middle;
+		Triangle[] j1=new Triangle[l1];
+		Triangle[] j2=new Triangle[l2];
+		for (int i=0; i<l1; ++i){
+			 j1[i] = sort_this[low + i]; 
+		} 
+        for (int i=0; i<l2; ++i){
+			 j2[i] = sort_this[middle+1 + i]; 
+		}   
 		int cnt1=0;
 		int cnt2=0;
-		for(int i=0;i<(l1+l2);i++){
-			if((cnt1==l1)&&(cnt2<l2)){
-				mergedarray[i]=array2[cnt2];
-				cnt2++;
-			}
-			else if((cnt2==l2)&&(cnt1<l1)){
-				mergedarray[i]=array1[cnt1];
+		int cnt3=low;
+		while(cnt1<l1&&cnt2<l2){
+			if((j1[cnt1].timestamp)<(j2[cnt2].timestamp)){
+				sort_this[cnt3]=j1[cnt1];
 				cnt1++;
 			}
-			else if((cnt1<l1)&&(cnt2<l2)){
-				if((array1[cnt1].timestamp)<(array2[cnt2].timestamp)){
-					mergedarray[i]=array1[cnt1];
-					cnt1++;
-				}
-				else{
-					mergedarray[i]=array2[cnt2];
-					cnt2++;
-				}
+			else{
+				sort_this[cnt3]=j2[cnt2];
+				cnt2++;
 			}
+			cnt3++;
 		}
-		return mergedarray;
+		while (cnt1 < l1) 
+        { 
+            sort_this[cnt3] = j1[cnt1]; 
+            cnt1++; 
+            cnt3++; 
+        } 
+        while (cnt2 < l2) 
+        { 
+            sort_this[cnt3] = j2[cnt2]; 
+            cnt2++; 
+            cnt3++; 
+        } 
+
+		// int l1=array1.length;
+		// int l2=array2.length;
+		// Triangle[] mergedarray = new Triangle[(l1+l2)];
+		// int cnt1=0;
+		// int cnt2=0;
+		// for(int i=0;i<(l1+l2);i++){
+		// 	if((cnt1==l1)&&(cnt2<l2)){
+		// 		mergedarray[i]=array2[cnt2];
+		// 		cnt2++;
+		// 	}
+		// 	else if((cnt2==l2)&&(cnt1<l1)){
+		// 		mergedarray[i]=array1[cnt1];
+		// 		cnt1++;
+		// 	}
+		// 	else if((cnt1<l1)&&(cnt2<l2)){
+		// 		if((array1[cnt1].timestamp)<(array2[cnt2].timestamp)){
+		// 			mergedarray[i]=array1[cnt1];
+		// 			cnt1++;
+		// 		}
+		// 		else{
+		// 			mergedarray[i]=array2[cnt2];
+		// 			cnt2++;
+		// 		}
+		// 	}
+		// }
+		// return mergedarray;
 	}
 
 
@@ -781,13 +893,13 @@ public class Shape implements ShapeInterface
 			temp=temp.next;
 		}
 			
-		System.out.println(max);
+		//System.out.println(max);
 		return max;
 	}
 
 
-	public void depth_traversal_3(T_vertex tempo,Point you,vector<P_vertex> helpmetoo){
-		if(tempo.V_status==true){
+	public void depth_traversal_3(T_vertex tempo,dpoint you,vector<P_vertex> helpmetoo){
+		/*if(tempo.V_status==true){
 			return;
 		}
 		else{
@@ -827,6 +939,51 @@ public class Shape implements ShapeInterface
 				depth_traversal_3(trythis,you,helpmetoo);
 				temp=temp.next;
 			}
+		}*/
+		vector<T_vertex> queue=new vector<T_vertex>();
+		queue.add(tempo);
+		v_node<T_vertex> temp=queue.head;
+		while(temp!=null){
+			T_vertex searchthis=(T_vertex)temp.getData();
+			searchthis.V_status=true;
+			P_vertex p1=searchthis.point1;
+			P_vertex p2=searchthis.point2;
+			P_vertex p3=searchthis.point3;
+			if(p1.V_status==false){
+				p1.V_status=true;
+				Point owner=p1.owner;
+				you.X_coordinate+=owner.getX();
+				you.Y_coordinate+=owner.getY();
+				you.Z_coordinate+=owner.getZ();
+				helpmetoo.add(p1);
+			}
+			if(p2.V_status==false){
+				p2.V_status=true;
+				Point owner=p2.owner;
+				you.X_coordinate+=owner.getX();
+				you.Y_coordinate+=owner.getY();
+				you.Z_coordinate+=owner.getZ();
+				helpmetoo.add(p2);
+			}
+			if(p3.V_status==false){
+				p3.V_status=true;
+				Point owner=p3.owner;
+				you.X_coordinate+=owner.getX();
+				you.Y_coordinate+=owner.getY();
+				you.Z_coordinate+=owner.getZ();
+				helpmetoo.add(p3);
+			}
+			vector<T_vertex> new_padosi=searchthis.padosi;
+			int length=new_padosi.size();
+			v_node<T_vertex> temp2=new_padosi.head;
+			for(int i=0;i<length;i++){
+				T_vertex addthis=(T_vertex)temp2.getData();
+				if(addthis.V_status==false){
+					queue.add(addthis);
+				}					
+				temp2=temp2.next;
+			}
+			temp=temp.next;
 		}		
 	}
 
@@ -847,31 +1004,59 @@ public class Shape implements ShapeInterface
 	}
 
 	public Point[] sortThisArray_three(Point[] sort_this){
-		Point[] really=merge_sort_three(sort_this,0,(sort_this.length-1));
-		return really;
+		merge_sort_three(sort_this,0,(sort_this.length-1));
+		//System.out.println("t1");
+		return sort_this;
 	}
-	public Point[] merge_sort_three(Point[] sort_this,int low,int high){
-		if(low==high){
-			Point[] onearr=new Point[1];
-			onearr[0]=sort_this[low];
-			return onearr;
-		}
-		else if(low<high){
+	public void merge_sort_three(Point[] sort_this,int low,int high){
+		//System.out.println("hey");
+		
+		if(low<high){
 			int middle=(low+high)/2;
-			Point[] array1=merge_sort_three(sort_this,low,middle);
-			Point[] array2=merge_sort_three(sort_this,middle+1,high);
-			Point[] finalarray=merge_three(array1,array2);
-			return finalarray;
+			merge_sort_three(sort_this,low,middle);
+			merge_sort_three(sort_this,middle+1,high);
+			merge_three(sort_this,low,middle,high);
 		}
-		return null;
 	}
-	public Point[] merge_three(Point[] array1,Point[] array2){
-		int l1=array1.length;
-		int l2=array2.length;
-		Point[] mergedarray = new Point[(l1+l2)];
+	public void merge_three(Point[] sort_this,int low,int middle,int high){
+		int l1=middle-low+1;
+		int l2=high-middle;
+		Point[] j1=new Point[l1];
+		Point[] j2=new Point[l2];
+		for (int i=0; i<l1; ++i){
+			 j1[i] = sort_this[low + i]; 
+		} 
+        for (int i=0; i<l2; ++i){
+			 j2[i] = sort_this[middle+1 + i]; 
+		}   
 		int cnt1=0;
 		int cnt2=0;
-		for(int i=0;i<(l1+l2);i++){
+		int cnt3=low;
+		while(cnt1<l1&&cnt2<l2){
+			if((j1[cnt1].compare(j2[cnt2]))<0){
+				sort_this[cnt3]=j1[cnt1];
+				cnt1++;
+			}
+			else{
+				sort_this[cnt3]=j2[cnt2];
+				cnt2++;
+			}
+			cnt3++;
+		}
+		while (cnt1 < l1) 
+        { 
+            sort_this[cnt3] = j1[cnt1]; 
+            cnt1++; 
+            cnt3++; 
+        } 
+        while (cnt2 < l2) 
+        { 
+            sort_this[cnt3] = j2[cnt2]; 
+            cnt2++; 
+            cnt3++; 
+        } 
+
+		/*for(int i=0;i<(l1+l2);i++){
 			if((cnt1==l1)&&(cnt2<l2)){
 				mergedarray[i]=array2[cnt2];
 				cnt2++;
@@ -881,7 +1066,8 @@ public class Shape implements ShapeInterface
 				cnt1++;
 			}
 			else if((cnt1<l1)&&(cnt2<l2)){
-				if((array1[cnt1].compare(array2[cnt2]))==-1){
+				if((array1[cnt1].compare(array2[cnt2]))<0){
+
 					mergedarray[i]=array1[cnt1];
 					cnt1++;
 				}
@@ -891,7 +1077,7 @@ public class Shape implements ShapeInterface
 				}
 			}
 		}
-		return mergedarray;
+		return mergedarray;*/
 	}
 
 	public PointInterface [] CENTROID (){
@@ -907,7 +1093,7 @@ public class Shape implements ShapeInterface
 		while(temp!=null){
 			//System.out.println("h1");
 			vector<P_vertex> jjthomp=new vector<P_vertex>();
-			Point record=new Point(0,0,0);
+			dpoint record=new dpoint(0,0,0);
 			T_vertex subject=(T_vertex)temp.getData();
 			if((subject.V_status)==true){
 				temp=temp.next;
@@ -918,7 +1104,8 @@ public class Shape implements ShapeInterface
 				record.X_coordinate/=divisor;
 				record.Y_coordinate/=divisor;
 				record.Z_coordinate/=divisor;
-				all_average.add(record);
+				Point cock=new Point(((float)record.X_coordinate),((float)record.Y_coordinate),((float)record.Z_coordinate));
+				all_average.add(cock);
 				//System.out.println(record);
 				v_node<P_vertex> kk=jjthomp.head;
 				while(kk!=null){
@@ -959,17 +1146,18 @@ public class Shape implements ShapeInterface
 		else{
 			v_node<T_vertex> temp=wegetthis.triangles.head;
 			vector<P_vertex> jjthomp=new vector<P_vertex>();
-			Point record=new Point((float)0,(float)0,(float)0);
+			dpoint record=new dpoint(0,0,0);
 			T_vertex subject=(T_vertex)temp.getData();
 			//System.out.println("Hey");
 			depth_traversal_3(subject,record,jjthomp);
 			//System.out.println("Hey1");
-			float divisor=(float)(jjthomp.size());//confirm before submission
+			int divisor=(jjthomp.size());//confirm before submission
 			//System.out.println(record);
 			//System.out.println(divisor);
 			record.X_coordinate/=divisor;
 			record.Y_coordinate/=divisor;
 			record.Z_coordinate/=divisor;
+			Point cock=new Point(((float)record.X_coordinate),((float)record.Y_coordinate),((float)record.Z_coordinate));
 			//all_average.add(record);
 			v_node<P_vertex> kk=jjthomp.head;
 			while(kk!=null){
@@ -977,7 +1165,7 @@ public class Shape implements ShapeInterface
 				bad.V_status=false;
 				kk=kk.next;
 			}
-			//System.out.println(record);
+			//System.out.println(cock);
 			vector<T_vertex> war_cry=all_triangle.triangles;
 			v_node<T_vertex> soldier=war_cry.head;
 			while(soldier!=null){
@@ -985,14 +1173,14 @@ public class Shape implements ShapeInterface
 			weapon.V_status=false;
 			soldier=soldier.next;
 		}
-			return record;
+			return cock;
 		}
 		
 
 	}
 
 	public void depth_traversal_final(T_vertex tempo,vector<P_vertex> tuck){
-		if(tempo.V_status==true){
+		/*if(tempo.V_status==true){
 			return;
 		}
 		else{
@@ -1020,7 +1208,49 @@ public class Shape implements ShapeInterface
 				depth_traversal_final(trythis,tuck);
 				temp=temp.next;
 			}
-		}		
+		}	*/
+				vector<P_vertex> bomb=all_vertex.vertices;
+				v_node<P_vertex> chick=bomb.head;
+				while(chick!=null){
+					P_vertex gal=(P_vertex)chick.getData();
+					gal.V_status=false;
+					chick=chick.next;
+				}
+		vector<T_vertex> queue=new vector<T_vertex>();
+		queue.add(tempo);
+		v_node<T_vertex> temp=queue.head;
+		while(temp!=null){
+			T_vertex searchthis=(T_vertex)temp.getData();
+			searchthis.V_status=true;
+			P_vertex p1=searchthis.point1;
+			P_vertex p2=searchthis.point2;
+			P_vertex p3=searchthis.point3;
+			if(p1.V_status==false){
+				p1.V_status=true;
+				tuck.add(p1);
+			}
+			if(p2.V_status==false){
+				p2.V_status=true;
+				tuck.add(p2);
+			}
+			if(p3.V_status==false){
+				p3.V_status=true;
+				tuck.add(p3);
+			}
+			vector<T_vertex> new_padosi=searchthis.padosi;
+			int length=new_padosi.size();
+			v_node<T_vertex> temp2=new_padosi.head;
+			for(int i=0;i<length;i++){
+				T_vertex addthis=(T_vertex)temp2.getData();
+				if(addthis.V_status==false){
+					queue.add(addthis);
+				}					
+				temp2=temp2.next;
+			}
+			temp=temp.next;
+		}
+		//System.out.println(queue.size());
+		//System.out.println(tuck.size());
 	}
 
 	public float calculator(P_vertex outer,P_vertex inner){
@@ -1028,7 +1258,7 @@ public class Shape implements ShapeInterface
 		Point owner2=inner.owner;
 		Edge forget=new Edge(owner1,owner2);
 		//System.out.println(forget.getLength());
-		return forget.getLength();
+		return (forget.getLength());
 	}
 
 	public 	PointInterface [] CLOSEST_COMPONENTS(){
@@ -1061,8 +1291,12 @@ public class Shape implements ShapeInterface
 			}
 		}
 		int size_one=major.size();
-		//System.out.println(indexing);
+		if(size_one==1){
+			return null;
+		}
+		//System.out.println(size_one);
 		//System.out.println(tree);
+		//System.out.println(indexing);
 		float g_min=(float)(-9);
 		P_vertex lelo=null;
 		P_vertex dedo=null;
@@ -1070,6 +1304,7 @@ public class Shape implements ShapeInterface
 		while(naah!=null){
 			//System.out.println("L1");
 			vector<P_vertex> list=(vector<P_vertex>)naah.getData();
+			//System.out.println(list.size());
 			v_node<vector<P_vertex>> haan=major.head;
 			//System.out.println(list.index);
 			while(haan!=null){
@@ -1114,6 +1349,14 @@ public class Shape implements ShapeInterface
 			}
 			naah=naah.next;
 		}
+		vector<T_vertex> tricon1=all_triangle.triangles;
+		v_node<T_vertex> fuck1=tricon1.head;
+		while(fuck1!=null){
+			T_vertex dog=(T_vertex)fuck1.getData();
+			dog.V_status=false;
+			fuck1=fuck1.next;
+		}
+
 		if(lelo==null||dedo==null){
 			return null;
 		}
