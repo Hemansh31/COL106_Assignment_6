@@ -45,7 +45,7 @@ class Triangle implements TriangleInterface {
 	}
 	@Override
 	public String toString(){
-		String answer="[( "+point1.toString()+" "+point2.toString()+" "+point3.toString()+" )]";
+		String answer="[ "+point1.toString()+"|"+point2.toString()+"|"+point3.toString()+" ]";
 		return answer;
 	}
 }

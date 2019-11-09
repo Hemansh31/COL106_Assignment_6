@@ -224,6 +224,7 @@ public class Shape implements ShapeInterface
 			temp=temp.next;
 		}
 		int bsize=edgeb.size();
+		//System.out.println(bsize);
 		if(bsize==0){
 			return null;
 		}
@@ -232,9 +233,15 @@ public class Shape implements ShapeInterface
 		for(int i=0;i<bsize;i++){
 			Edge insertthis=(Edge)temp2.getData();
 			sortthis[i]=insertthis;
+			temp2=temp2.next;
 		}
 		Edge[] inter=sortThisArray(sortthis);
+		/*for(int o=0;o<inter.length;o++){
+				System.out.print(inter[o]);
+			}
+				System.out.println();*/
 		EdgeInterface[] returnthis=inter; //could be a compilation error
+		//System.out.println(returnthis.length);
 		return returnthis;
 	}
 
@@ -340,6 +347,7 @@ public class Shape implements ShapeInterface
 		else{
 			vector<T_vertex> neighbours=wegetthis.padosi;
 			int length=neighbours.size();
+			//System.out.println(length);
 			Triangle[] sortthis=new Triangle[length];
 			v_node<T_vertex> temp=neighbours.head;
 			int index=0;
@@ -376,6 +384,10 @@ public class Shape implements ShapeInterface
 			returnthis[0]=edge_one.owner;
 			returnthis[1]=edge_two.owner;
 			returnthis[2]=edge_three.owner;
+			/*for(int o=0;o<3;o++){
+				System.out.print(returnthis[o]);
+			}
+				System.out.println();*/
 			return returnthis;
 		}
 	}
@@ -395,6 +407,10 @@ public class Shape implements ShapeInterface
 			returnthis[0]=goodforyou.point1;
 			returnthis[1]=goodforyou.point2;
 			returnthis[2]=goodforyou.point3;
+			/*for(int o=0;o<3;o++){
+				System.out.print(returnthis[o]);
+			}
+				System.out.println();*/
 			return returnthis;
 		}		
 	}
@@ -461,6 +477,9 @@ public class Shape implements ShapeInterface
 				temp=temp.next;
 			}	
 			Triangle[] inter=sortThisArray_two(sortthis);
+			/*for(int j=0;j<inter.length;j++){
+				System.out.println(inter[j]);
+			}*/
 			TriangleInterface[] returnthis=inter; //could be a compilation error
 			return returnthis;					
 		}		
@@ -486,6 +505,9 @@ public class Shape implements ShapeInterface
 				temp=temp.next;
 			}	
 			Triangle[] inter=sortThisArray_two(sortthis);
+			/*for(int j=0;j<inter.length;j++){
+				System.out.println(inter[j]);
+			}*/
 			TriangleInterface[] returnthis=inter; //could be a compilation error
 			return returnthis;	
 		}
@@ -512,6 +534,10 @@ public class Shape implements ShapeInterface
 				index++;
 				temp=temp.next;
 			}
+			/*for(int g=0;g<returnthis.length;g++){
+				System.out.print(returnthis[g]);
+			}
+			System.out.println();*/
 			return returnthis;
 		}
 	}
@@ -755,7 +781,7 @@ public class Shape implements ShapeInterface
 			temp=temp.next;
 		}
 			
-		//System.out.println(max);
+		System.out.println(max);
 		return max;
 	}
 
@@ -812,10 +838,12 @@ public class Shape implements ShapeInterface
 		while(temp!=null){
 			Point db=(Point)temp.getData();
 			sort_this[index]=db;
+			index++;
 			temp=temp.next;
 		}
+
 		Point[] returnthis=sortThisArray_three(sort_this);
-		return returnthis;
+		return sort_this;
 	}
 
 	public Point[] sortThisArray_three(Point[] sort_this){
@@ -870,7 +898,14 @@ public class Shape implements ShapeInterface
 		vector<T_vertex> ctricon=all_triangle.triangles;
 		v_node<T_vertex> temp=ctricon.head;
 		vector<Point> all_average=new vector<Point>();
+		v_node<T_vertex> temp3=ctricon.head;
+		while(temp3!=null){
+			T_vertex subject=(T_vertex)temp3.getData();
+			subject.V_status=false;
+			temp3=temp3.next;
+		}
 		while(temp!=null){
+			//System.out.println("h1");
 			vector<P_vertex> jjthomp=new vector<P_vertex>();
 			Point record=new Point(0,0,0);
 			T_vertex subject=(T_vertex)temp.getData();
@@ -884,14 +919,19 @@ public class Shape implements ShapeInterface
 				record.Y_coordinate/=divisor;
 				record.Z_coordinate/=divisor;
 				all_average.add(record);
+				//System.out.println(record);
 				v_node<P_vertex> kk=jjthomp.head;
 				while(kk!=null){
 					P_vertex bad=(P_vertex)kk.getData();
 					bad.V_status=false;
+					kk=kk.next;
 				}
 				temp=temp.next;				
 			}
 		}
+		//System.out.println(all_average.size());
+		/*System.out.println(all_average.head.getData());
+		System.out.println(all_average.head.next.getData());*/
 		Point[] sortthis=P_SORT(all_average);
 		v_node<T_vertex> temp2=ctricon.head;
 		while(temp2!=null){
@@ -899,7 +939,13 @@ public class Shape implements ShapeInterface
 			subject.V_status=false;
 			temp2=temp2.next;
 		}
+		//System.out.println(sortthis.length);
 		PointInterface[] returnthis=sortthis;
+		/*for(int j=0;j<sortthis.length;j++){
+			System.out.println(sortthis[j]);
+		}*/
+		
+		//PointInterface[] returnthis=sortthis;
 		return returnthis;
 
 	}
@@ -919,8 +965,8 @@ public class Shape implements ShapeInterface
 			depth_traversal_3(subject,record,jjthomp);
 			//System.out.println("Hey1");
 			float divisor=(float)(jjthomp.size());//confirm before submission
-			System.out.println(record);
-			System.out.println(divisor);
+			//System.out.println(record);
+			//System.out.println(divisor);
 			record.X_coordinate/=divisor;
 			record.Y_coordinate/=divisor;
 			record.Z_coordinate/=divisor;
@@ -981,6 +1027,7 @@ public class Shape implements ShapeInterface
 		Point owner1=outer.owner;
 		Point owner2=inner.owner;
 		Edge forget=new Edge(owner1,owner2);
+		//System.out.println(forget.getLength());
 		return forget.getLength();
 	}
 

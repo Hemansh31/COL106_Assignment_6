@@ -33,4 +33,9 @@ class Edge implements EdgeInterface {
 			return false;
 		}
 	}
+	@Override
+	public String toString(){
+		String answer="["+Point1.toString()+"|"+Point2.toString()+"]";
+		return answer;
+	}
 }
